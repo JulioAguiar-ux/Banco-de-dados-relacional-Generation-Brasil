@@ -1,0 +1,76 @@
+
+CREATE DATABASE IF NOT EXISTS db_farmacia_bem_estar;
+
+USE db_farmacia_bem_estar;
+
+
+CREATE TABLE IF NOT EXISTS tb_categorias(
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    nome_categoria VARCHAR(100) NOT NULL,
+    setor VARCHAR(100),
+    descricao VARCHAR(255)
+);
+
+
+CREATE TABLE IF NOT EXISTS tb_produtos(
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(100) NOT NULL,
+    preco DECIMAL(6,2) NOT NULL,
+    estoque INT,
+    fabricante VARCHAR(100),
+    categoria_id BIGINT,
+    CONSTRAINT fk_produto_categoria
+    FOREIGN KEY (categoria_id) REFERENCES tb_categorias(id)
+);
+
+
+INSERT INTO tb_categorias (nome_categoria, setor, descricao) VALUES
+("Medicamentos", "Saúde", "Remédios em geral"),
+("Cosméticos", "Beleza", "Produtos de beleza"),
+("Higiene", "Cuidados pessoais", "Produtos de higiene"),
+("Vitaminas", "Suplementos", "Vitaminas e suplementos"),
+("Infantil", "Bebês", "Produtos infantis");
+
+
+INSERT INTO tb_produtos (nome, preco, estoque, fabricante, categoria_id) VALUES
+("Paracetamol", 10.00, 100, "EMS", 1),
+("Shampoo Clear", 25.00, 50, "Unilever", 3),
+("Creme Dental", 8.00, 200, "Colgate", 3),
+("Vitamina C", 55.00, 80, "Cimed", 4),
+("Protetor Solar", 70.00, 40, "Nivea", 2),
+("Fralda Infantil", 60.00, 30, "Pampers", 5),
+("Dipirona", 6.00, 150, "Neo Química", 1),
+("Condicionador", 22.00, 60, "Pantene", 3);
+
+--  Produtos com valor > 50
+SELECT * FROM tb_produtos
+WHERE preco > 50.00;
+
+--  Produtos com valor entre 5 e 60
+SELECT * FROM tb_produtos
+WHERE preco BETWEEN 5.00 AND 60.00;
+
+-- Produtos com letra C no nome
+SELECT * FROM tb_produtos
+WHERE nome LIKE "%C%";
+
+-- produto + categoria
+SELECT 
+    p.nome,
+    p.preco,
+    p.estoque,
+    c.nome_categoria
+FROM tb_produtos p
+INNER JOIN tb_categorias c
+ON p.categoria_id = c.id;
+
+
+SELECT 
+    p.nome,
+    p.preco,
+    p.estoque,
+    c.nome_categoria
+FROM tb_produtos p
+INNER JOIN tb_categorias c
+ON p.categoria_id = c.id
+WHERE c.nome_categoria = "Cosméticos";
