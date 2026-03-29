@@ -1,0 +1,77 @@
+CREATE DATABASE IF NOT EXISTS db_pizzaria_legal;
+
+
+USE db_pizzaria_legal;
+
+
+CREATE TABLE IF NOT EXISTS tb_categorias(
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    nome_categoria VARCHAR(100) NOT NULL,
+    descricao VARCHAR(255)
+);
+
+
+CREATE TABLE IF NOT EXISTS tb_pizzas(
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(100) NOT NULL,
+    tamanho VARCHAR(50),
+    preco DECIMAL(6,2) NOT NULL,
+    ingredientes VARCHAR(255),
+    categoria_id BIGINT,
+    CONSTRAINT fk_pizza_categoria
+    FOREIGN KEY (categoria_id) REFERENCES tb_categorias(id)
+);
+
+
+INSERT INTO tb_categorias (nome_categoria, descricao) VALUES
+("Salgada", "Pizzas tradicionais salgadas"),
+("Doce", "Pizzas doces"),
+("Vegetariana", "Sem carne"),
+("Especial", "Pizzas gourmet"),
+("Premium", "Pizzas especiais da casa");
+
+
+INSERT INTO tb_pizzas (nome, tamanho, preco, ingredientes, categoria_id) VALUES
+("Mussarela", "Grande", 40.00, "Queijo, molho de tomate", 1),
+("Calabresa", "Grande", 50.00, "Calabresa, cebola", 1),
+("Margherita", "Média", 55.00, "Queijo, tomate, manjericão", 4),
+("Chocolate", "Pequena", 45.00, "Chocolate, leite condensado", 2),
+("Morango com Chocolate", "Média", 60.00, "Morango, chocolate", 2),
+("Vegetariana Especial", "Grande", 70.00, "Legumes variados", 3),
+("Frango com Catupiry", "Grande", 65.00, "Frango, catupiry", 5),
+("Milho com Bacon", "Média", 52.00, "Milho, bacon", 1);
+
+
+
+--  Pizzas com valor > 45
+SELECT * FROM tb_pizzas
+WHERE preco > 45.00;
+
+--  Pizzas com valor entre 50 e 100
+SELECT * FROM tb_pizzas
+WHERE preco BETWEEN 50.00 AND 100.00;
+
+--  Pizzas com letra M no nome
+SELECT * FROM tb_pizzas
+WHERE nome LIKE "%M%";
+
+--  pizza + categoria
+SELECT 
+    p.nome,
+    p.tamanho,
+    p.preco,
+    c.nome_categoria
+FROM tb_pizzas p
+INNER JOIN tb_categorias c
+ON p.categoria_id = c.id;
+
+
+SELECT 
+    p.nome,
+    p.tamanho,
+    p.preco,
+    c.nome_categoria
+FROM tb_pizzas p
+INNER JOIN tb_categorias c
+ON p.categoria_id = c.id
+WHERE c.nome_categoria = "Doce";
